@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -17,15 +18,12 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 
-//	@Bean
-//	CommandLineRunner commandLineRunner(BookRepository bookRepository) {
-//		return args -> {
-//			String dateString = "10-03-2022";
-//			SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-//			Date date = formatter.parse(dateString);
-//			Book book  = new Book("Asimov", "Foundation", date, "Nurbol");
-//			bookRepository.save(book);
-//		};
-//	}
+	@Bean
+	CommandLineRunner commandLineRunner(BookRepository bookRepository) {
+		return args -> {
+			Book book  = new Book(1L, "Asimov", "Foundation", "10.03.2022", "Nurbol", "Karbysheva");
+			bookRepository.save(book);
+		};
+	}
 
 }
