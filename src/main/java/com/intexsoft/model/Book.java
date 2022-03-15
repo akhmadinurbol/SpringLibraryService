@@ -1,13 +1,14 @@
 package com.intexsoft.model;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.*;
 
 import static jakarta.persistence.GenerationType.*;
 
-@Table
-@Entity(name = "Book")
+@Entity
+@Table(name = "book")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,5 +25,17 @@ public class Book {
     private String name;
     private String issuedDate;
     private String issuedTo;
-    private String library;
+
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "library_id")
+    private Library library = new Library();
+
+
+    public Book(String author, String name, String issuedDate, String issuedTo) {
+        this.author = author;
+        this.name = name;
+        this.issuedDate = issuedDate;
+        this.issuedTo = issuedTo;
+    }
 }

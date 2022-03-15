@@ -1,15 +1,7 @@
 package com.intexsoft;
 
-import com.intexsoft.model.Book;
-import com.intexsoft.repository.BookRepository;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @SpringBootApplication
 public class Application {
@@ -17,13 +9,18 @@ public class Application {
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
-
-	@Bean
-	CommandLineRunner commandLineRunner(BookRepository bookRepository) {
-		return args -> {
-			Book book  = new Book(1L, "Asimov", "Foundation", "10.03.2022", "Nurbol", "Karbysheva");
-			bookRepository.save(book);
-		};
-	}
-
 }
+//	Insert Into library (library_id, library_name)
+//	VALUES
+//			(1, 'Lenina'),
+//			(2, 'Karbysheva'),
+//			(3, 'GRSU')
+//
+//			   insert into book (id, author, issued_date, issued_to, name, library_id)
+//			   VALUES
+//			   (1, 'Asimov', 'Foundation', '2006.12.10', 'Ruksha', 1),
+//			   (2, 'Bulgakov', 'Margaritha', '', '', 2),
+//			   (3, 'Bulgakov', 'SobachjeSerdce', '', '', 3),
+//			   (4, 'Oreilly', 'ThinkingInJava', '2006.12.06', 'Maizik', 2),
+//			   (5, 'Akhmadi', 'HeadFirstJava', '2022.02.13', 'Olzhas', 3),
+//			   (6, 'Yakov', 'Hibernate', '', '', 1)

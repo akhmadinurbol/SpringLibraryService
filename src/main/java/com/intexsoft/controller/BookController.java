@@ -1,5 +1,6 @@
 package com.intexsoft.controller;
 
+import com.intexsoft.dto.BookRequest;
 import com.intexsoft.model.Book;
 import com.intexsoft.service.BookService;
 import lombok.*;
@@ -16,26 +17,25 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping("/order")
-    public ResponseEntity orderBook(@RequestBody Book book) {
-        boolean result = bookService.orderBook(book.getId(), book.getIssuedTo());
-        if (result){
+    public ResponseEntity orderBook(@RequestBody BookRequest book) {
+        String result = bookService.orderBook(book.getId(), book.getIssuedTo());
+        if (result.equals("OK")){
             return new ResponseEntity("Successfully ordered!", HttpStatus.OK);
         }
-        return ResponseEntity.badRequest().body("Bad request!");
+        return ResponseEntity.badRequest().body(result);
     }
 
     @GetMapping("/return")
     public ResponseEntity returnBook(@RequestParam Long id) {
-        boolean result = bookService.returnBook(id);
-        if (result){
+        String result = bookService.returnBook(id);
+        if (result.equals("OK")){
             return new ResponseEntity("Successfully returned!", HttpStatus.OK);
         }
-        return ResponseEntity.badRequest().body("Bad request!");
+        return ResponseEntity.badRequest().body(result);
     }
 
     @PostMapping("/find")
-    public List<Book> findBooks(@RequestBody Book book){
+    public List<BookRequest> findBooks(@RequestBody BookRequest book){
         return bookService.findBooks(book);
     }
-
 }

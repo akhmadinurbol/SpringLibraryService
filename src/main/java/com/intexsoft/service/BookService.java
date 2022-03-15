@@ -1,5 +1,6 @@
 package com.intexsoft.service;
 
+import com.intexsoft.dto.BookRequest;
 import com.intexsoft.model.Book;
 import com.intexsoft.repository.BookRepository;
 import com.intexsoft.service.interfaces.IBookService;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +20,7 @@ public class BookService implements IBookService {
     private final BookRepository bookRepository;
 
     @Override
-    public boolean returnBook(Long id) {
+    public String returnBook(Long id) {
         if(bookRepository.findById(id).isPresent()){
             Book book = bookRepository.findById(id).get();
 
@@ -26,17 +28,17 @@ public class BookService implements IBookService {
                 book.setIssuedDate("");
                 book.setIssuedTo("");
                 bookRepository.save(book);
-                return true;
+                return "OK";
             } else {
-                return false;
+                return "ALREADYRETURNED";
             }
         } else {
-            return false;
+            return "NOTFOUND";
         }
     }
 
     @Override
-    public boolean orderBook(Long id, String issuedTo) {
+    public String orderBook(Long id, String issuedTo) {
         if (bookRepository.findById(id).isPresent()){
             Book book = bookRepository.findById(id).get();
 
@@ -47,17 +49,31 @@ public class BookService implements IBookService {
                 book.setIssuedTo(issuedTo);
                 book.setIssuedDate(date);
                 bookRepository.save(book);
-                return true;
+                return "OK";
             } else {
-                return false;
+                return "RESERVED";
             }
         } else {
-            return false;
+            return "NOTFOUND";
         }
     }
 
     @Override
-    public List<Book> findBooks(Book book) {
-        return bookRepository.findByAuthorOrName(book.getAuthor(), book.getName());
+    public List<BookRequest> findBooks(BookRequest bookRequest) {
+        List<Book> bookList = bookRepository.findByAuthorOrName(bookRequest.getAuthor(), bookRequest.getName());
+        List<BookRequest> bookRequestList = new ArrayList<>();
+        for (Book book : bookList){
+            BookRequest newBook = new BookRequest(
+                    book.getId(),
+                    book.getAuthor(),
+                    book.getName(),
+                    book.getIssuedDate(),
+                    book.getIssuedTo(),
+                    book.getLibrary().getLibrary_id(),
+                    book.getLibrary().getLibraryName()
+            );
+            bookRequestList.add(newBook);
+        }
+        return bookRequestList;
     }
 }
