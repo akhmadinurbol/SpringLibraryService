@@ -31,8 +31,15 @@ public class Book {
     @JoinColumn(name = "library_id")
     private Library library = new Library();
 
-
     public Book(String author, String name, String issuedDate, String issuedTo) {
+        this.author = author;
+        this.name = name;
+        this.issuedDate = issuedDate;
+        this.issuedTo = issuedTo;
+    }
+
+    public Book(Long id, String author, String name, String issuedDate, String issuedTo) {
+        this.id = id;
         this.author = author;
         this.name = name;
         this.issuedDate = issuedDate;

@@ -1,6 +1,5 @@
 package com.intexsoft.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,5 +22,5 @@ public class Library {
     private String libraryName;
 
     @OneToMany(mappedBy = "library", cascade = CascadeType.ALL)
-    private List<Book> libraryList;
+    private List<Book> bookList;
 }

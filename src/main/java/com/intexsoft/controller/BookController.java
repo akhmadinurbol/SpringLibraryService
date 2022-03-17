@@ -15,6 +15,33 @@ import java.util.List;
 @AllArgsConstructor
 public class BookController {
     private final BookService bookService;
+    @PutMapping("/create")
+    public ResponseEntity createBook(@RequestBody BookRequest book){
+        String result = bookService.createBook(book);
+        if (result.equals("OK")){
+            return new ResponseEntity("Successfully added!", HttpStatus.OK);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity updateBook(@RequestBody BookRequest book){
+        String result = bookService.updateBook(book);
+        if (result.equals("OK")){
+            return new ResponseEntity("Successfully changed!", HttpStatus.OK);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity deleteBook(@RequestParam Long id){
+        String result = bookService.deleteBook(id);
+        if (result.equals("OK")){
+            return new ResponseEntity("Successfully deleted!", HttpStatus.OK);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
 
     @GetMapping("/order")
     public ResponseEntity orderBook(@RequestBody BookRequest book) {
@@ -37,5 +64,10 @@ public class BookController {
     @PostMapping("/find")
     public List<BookRequest> findBooks(@RequestBody BookRequest book){
         return bookService.findBooks(book);
+    }
+
+    @PostMapping("/getAll")
+    public List<Book> getAllBooks(){
+        return bookService.getAllBooks();
     }
 }
