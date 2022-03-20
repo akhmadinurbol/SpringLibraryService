@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/book")
+@RequestMapping("api")
 @AllArgsConstructor
 public class BookController {
     private final BookService bookService;
-    @PutMapping("/create")
+
+    @PutMapping("/book/create")
     public ResponseEntity createBook(@RequestBody BookRequest book){
         String result = bookService.createBook(book);
         if (result.equals("OK")){
@@ -24,7 +25,7 @@ public class BookController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/book/update")
     public ResponseEntity updateBook(@RequestBody BookRequest book){
         String result = bookService.updateBook(book);
         if (result.equals("OK")){
@@ -33,8 +34,8 @@ public class BookController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity deleteBook(@RequestParam Long id){
+    @DeleteMapping("/book/delete/{id}")
+    public ResponseEntity deleteBook(@PathVariable Long id){
         String result = bookService.deleteBook(id);
         if (result.equals("OK")){
             return new ResponseEntity("Successfully deleted!", HttpStatus.OK);
@@ -42,8 +43,25 @@ public class BookController {
         return ResponseEntity.badRequest().body(result);
     }
 
+    @PostMapping("/books")
+    public List<Book> getAllBooks(){
+        return bookService.getAllBooks();
+    }
 
-    @GetMapping("/order")
+    @PostMapping("/book/{id}")
+    public ResponseEntity getBookById(@PathVariable Long id){
+        if (bookService.getBookById(id) == null){
+            return ResponseEntity.badRequest().body("NOTFOUND");
+        }
+        return ResponseEntity.ok().body(bookService.getBookById(id));
+    }
+
+    @PostMapping("/book/find")
+    public List<BookRequest> findBooks(@RequestBody BookRequest book){
+        return bookService.findBooksByAuthorAndName(book);
+    }
+
+    @GetMapping("/book/order")
     public ResponseEntity orderBook(@RequestBody BookRequest book) {
         String result = bookService.orderBook(book.getId(), book.getIssuedTo());
         if (result.equals("OK")){
@@ -52,22 +70,12 @@ public class BookController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @GetMapping("/return")
-    public ResponseEntity returnBook(@RequestParam Long id) {
+    @GetMapping("/book/return/{id}")
+    public ResponseEntity returnBook(@PathVariable Long id) {
         String result = bookService.returnBook(id);
         if (result.equals("OK")){
             return new ResponseEntity("Successfully returned!", HttpStatus.OK);
         }
         return ResponseEntity.badRequest().body(result);
-    }
-
-    @PostMapping("/find")
-    public List<BookRequest> findBooks(@RequestBody BookRequest book){
-        return bookService.findBooks(book);
-    }
-
-    @PostMapping("/getAll")
-    public List<Book> getAllBooks(){
-        return bookService.getAllBooks();
     }
 }

@@ -1,7 +1,6 @@
 package com.intexsoft.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,7 +17,7 @@ public class Book {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(updatable = false)
-    private Long id;
+    private Long book_id;
     @Column(nullable = false)
     private String author;
     @Column(nullable = false)
@@ -32,14 +31,6 @@ public class Book {
     private Library library = new Library();
 
     public Book(String author, String name, String issuedDate, String issuedTo) {
-        this.author = author;
-        this.name = name;
-        this.issuedDate = issuedDate;
-        this.issuedTo = issuedTo;
-    }
-
-    public Book(Long id, String author, String name, String issuedDate, String issuedTo) {
-        this.id = id;
         this.author = author;
         this.name = name;
         this.issuedDate = issuedDate;

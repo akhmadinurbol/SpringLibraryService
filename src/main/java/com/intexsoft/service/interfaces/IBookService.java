@@ -10,8 +10,8 @@ public interface IBookService {
     String updateBook(BookRequest request);
     String deleteBook(Long id);
     List<Book> getAllBooks();
-    Book findById(Long id);
-    List<BookRequest> findBooks(BookRequest request);
+    BookRequest getBookById(Long id);
+    List<BookRequest> findBooksByAuthorAndName(BookRequest request);
     String orderBook(Long id, String issuedTo);
     String returnBook(Long id);
 }
