@@ -16,7 +16,7 @@ import static jakarta.persistence.GenerationType.*;
 public class Library {
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private long library_id;
+    private Long libraryId;
 
     @Column(nullable = false)
     private String libraryName;

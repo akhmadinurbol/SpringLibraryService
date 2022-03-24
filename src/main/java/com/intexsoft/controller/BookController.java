@@ -16,7 +16,7 @@ import java.util.List;
 public class BookController {
     private final BookService bookService;
 
-    @PutMapping("/book/create")
+    @PostMapping("/book/create")
     public ResponseEntity createBook(@RequestBody BookRequest book){
         String result = bookService.createBook(book);
         if (result.equals("OK")){
@@ -43,12 +43,12 @@ public class BookController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @PostMapping("/books")
+    @GetMapping("/books")
     public List<Book> getAllBooks(){
         return bookService.getAllBooks();
     }
 
-    @PostMapping("/book/{id}")
+    @GetMapping("/book/{id}")
     public ResponseEntity getBookById(@PathVariable Long id){
         if (bookService.getBookById(id) == null){
             return ResponseEntity.badRequest().body("NOTFOUND");
@@ -56,12 +56,12 @@ public class BookController {
         return ResponseEntity.ok().body(bookService.getBookById(id));
     }
 
-    @PostMapping("/book/find")
+    @GetMapping("/book/find")
     public List<BookRequest> findBooks(@RequestBody BookRequest book){
         return bookService.findBooksByAuthorAndName(book);
     }
 
-    @GetMapping("/book/order")
+    @PutMapping("/book/order")
     public ResponseEntity orderBook(@RequestBody BookRequest book) {
         String result = bookService.orderBook(book.getId(), book.getIssuedTo());
         if (result.equals("OK")){
@@ -70,7 +70,7 @@ public class BookController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @GetMapping("/book/return/{id}")
+    @PutMapping("/book/return/{id}")
     public ResponseEntity returnBook(@PathVariable Long id) {
         String result = bookService.returnBook(id);
         if (result.equals("OK")){

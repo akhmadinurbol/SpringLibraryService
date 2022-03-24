@@ -23,19 +23,24 @@ public class LibraryService implements ILibraryService {
     @Override
     public String createLibrary(LibraryRequest request) {
         Library library = new Library(request.getLibraryId(), request.getLibraryName(), request.getBookList());
-        if (String.valueOf(library.getLibrary_id()).equals("") || library.getLibraryName().equals("")){
-            return "PLEASE ENTER ID AND NAME OF LIBRARY";
+        for (Book book : request.getBookList()){
+            book.setLibrary(library);
+        }
+        if (library.getLibraryName() == null || library.getLibraryName().isEmpty()){
+            return "PLEASE ENTER NAME OF LIBRARY";
         } else{
-            if (libraryRepository.findById(request.getLibraryId()).isPresent() || libraryRepository.findByLibraryName(request.getLibraryName()).isPresent()){
-                return "LIBRARY WITH THIS ID OR NAME ALREADY EXISTS";
+            if (libraryRepository.findByLibraryName(request.getLibraryName()).isPresent()){
+                return "LIBRARY WITH THIS NAME ALREADY EXISTS";
             } else{
                 libraryRepository.save(library);
                 if (!library.getBookList().isEmpty()){
                     for (Book book : library.getBookList()){
-                        BookRequest bookRequest = new BookRequest(book.getBook_id(), book.getAuthor(), book.getName(), book.getIssuedDate(), book.getIssuedTo(), library.getLibrary_id(), library.getLibraryName());
-                        if (bookRepository.findById(book.getBook_id()).isPresent()){
+                        BookRequest bookRequest = new BookRequest(book.getBookId(), book.getAuthor(), book.getName(), book.getIssuedDate(), book.getIssuedTo(), library.getLibraryId(), library.getLibraryName());
+                        if (book.getBookId() == null){
+                            bookService.createBook(bookRequest);
+                        } else if (bookRepository.findById(book.getBookId()).isPresent()){
                             bookService.updateBook(bookRequest);
-                        } else if(bookRepository.findById(book.getBook_id()).isEmpty()){
+                        } else if(bookRepository.findById(book.getBookId()).isEmpty()){
                             bookService.createBook(bookRequest);
                         }
                     }

@@ -22,24 +22,15 @@ public class BookService implements IBookService {
     private final BookRepository bookRepository;
     private final LibraryRepository libraryRepository;
 
-    /**
-     else if (libraryRepository.findByLibraryName(request.getLibraryName()).isEmpty()){
-     book.setBook_id(request.getId());
-     Library library = new Library(request.getLibraryId(), request.getLibraryName());
-     book.setLibrary(library);
-     bookRepository.save(book);
-     }
-     else{
-     return "LIBRARY NOTFOUND";
-     }
-     */
     @Override
     public String createBook(BookRequest request) {
         Book book = new Book(request.getAuthor(), request.getName(), request.getIssuedDate(), request.getIssuedTo());
-        if (libraryRepository.findById(request.getLibraryId()).isPresent() || libraryRepository.findByLibraryName(request.getLibraryName()).isPresent()){
+        if (libraryRepository.findById(request.getLibraryId()).isPresent()){
             Library library = libraryRepository.findById(request.getLibraryId()).get();
             book.setLibrary(library);
             bookRepository.save(book);
+        } else {
+            return "PLEASE ENTER LIBRARY ID";
         }
         return "OK";
     }
@@ -48,12 +39,18 @@ public class BookService implements IBookService {
     public String updateBook(BookRequest request) {
         if (bookRepository.findById(request.getId()).isPresent()){
             Book book = bookRepository.findById(request.getId()).get();
-            Book updatedBook = new Book(request.getId(), request.getAuthor(), request.getName(), request.getIssuedDate(), request.getIssuedTo(), book.getLibrary());
+            if (!request.getAuthor().isEmpty() && !request.getName().isEmpty()){
+                book.setAuthor(request.getAuthor());
+                book.setName(request.getName());
+            } else {
+                return "PLEASE ENTER AUTHOR AND NAME OF BOOK";
+            }
+            book.setIssuedDate(request.getIssuedDate());
+            book.setIssuedTo(request.getIssuedTo());
             if (libraryRepository.findById(request.getLibraryId()).isPresent()){
                 Library library = libraryRepository.findById(request.getLibraryId()).get();
-                updatedBook.setLibrary(library);
+                book.setLibrary(library);
             }
-            book = updatedBook;
             bookRepository.save(book);
             return "OK";
         } else {
@@ -81,12 +78,12 @@ public class BookService implements IBookService {
         if (bookRepository.findById(id).isPresent()){
             Book book = bookRepository.findById(id).get();
             return new BookRequest(
-                    book.getBook_id(),
+                    book.getBookId(),
                     book.getAuthor(),
                     book.getName(),
                     book.getIssuedDate(),
                     book.getIssuedTo(),
-                    book.getLibrary().getLibrary_id(),
+                    book.getLibrary().getLibraryId(),
                     book.getLibrary().getLibraryName()
             );
         } else {
@@ -100,12 +97,12 @@ public class BookService implements IBookService {
         List<BookRequest> bookRequestList = new ArrayList<>();
         for (Book book : bookList){
             BookRequest newBook = new BookRequest(
-                    book.getBook_id(),
+                    book.getBookId(),
                     book.getAuthor(),
                     book.getName(),
                     book.getIssuedDate(),
                     book.getIssuedTo(),
-                    book.getLibrary().getLibrary_id(),
+                    book.getLibrary().getLibraryId(),
                     book.getLibrary().getLibraryName()
             );
             bookRequestList.add(newBook);

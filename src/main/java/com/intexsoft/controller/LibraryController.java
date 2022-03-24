@@ -16,7 +16,7 @@ import java.util.List;
 public class LibraryController {
     private LibraryService libraryService;
 
-    @PutMapping("/library/create")
+    @PostMapping("/library/create")
     public ResponseEntity createLibrary(@RequestBody LibraryRequest request){
         String result = libraryService.createLibrary(request);
         if (result.equals("OK")){
@@ -43,12 +43,12 @@ public class LibraryController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @PostMapping("/library/{id}")
+    @GetMapping("/library/{id}")
     public Library getLibrary(@PathVariable Long id){
         return libraryService.getLibraryById(id);
     }
 
-    @PostMapping("/libraries")
+    @GetMapping("/libraries")
     public List<Library> getLibraries(){
         return libraryService.getLibraries();
     }
